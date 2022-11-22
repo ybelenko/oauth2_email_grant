@@ -47,7 +47,7 @@ final class CustomEmailGrantTest extends TestCase
         $this->user = null;
         $this->scopes = null;
         $this->grant = new CustomEmailGrant(new FakeUserRepository(), Closure::fromCallable([$this, 'onAccessTokenIssued']));
-        $this->grant->setPrivateKey(new CryptKey(realpath(__DIR__ . '/../fake_private.key')));
+        $this->grant->setPrivateKey(new CryptKey(realpath(__DIR__ . '/../fake_private.key'), null, false));
         $this->grant->setClientRepository(new FakeClientRepository());
         $this->grant->setScopeRepository(new FakeScopeRepository());
         $this->grant->setAccessTokenRepository(new FakeAccessTokenRepository());
