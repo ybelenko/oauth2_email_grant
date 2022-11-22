@@ -20,12 +20,18 @@
             "Ybelenko\\OAuth2\\Server\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Ybelenko\\OAuth2\\Server\\": "tests/"
+        }
+    },
     "require": {
         "php": "^8.0",
         "league/oauth2-server": "^8.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.9",
+        "guzzlehttp/psr7": "^2.4",
         "phpunit/phpunit": "^9.5"
     },
     "scripts": {
