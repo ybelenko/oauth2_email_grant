@@ -54,5 +54,55 @@ $grant = new CustomEmailGrant(
 $server->enableGrantType($grant, new \DateInterval('PT1H'));
 ```
 
+then in your `UserRepositoryInterface` implementation handle new custom grant:
+```php
+/**
+ * {@inheritdoc}
+ */
+public function getUserEntityByUserCredentials(
+    $username,
+    $password,
+    $grantType,
+    ClientEntityInterface $clientEntity
+) {
+    if ($grantType === 'custom_email') {
+        // password is empty string now
+        // just for readability
+        $email = $username;
+        // if user with provided email exists return new entity
+        // otherwise return null
+        // don't need to check password since we send token
+        // to provided email, works like common account recover flow
+        $user = new FakeUserEntity();
+        $user->setIdentifier($email);
+        return $user;
+    }
+
+    // handle other grants also check password from now
+
+    return null;
+}
+```
+
+To use new grant user can send POST with a small change(`grant_type` changed to `custom_email`, new field `email`):
+```json
+{
+    "grant_type": "custom_email",
+    "client_id": "client",
+    "client_secret": "secret",
+    "email": "johndoe@example.dev",
+    "scope": "foo baz bar"
+}
+```
+it's also possible to send `client_id` and `client_secret` as `"Authorization: Basic {base64_encode($clientId . ':' . $clientSecret)}"` HTTP header.
+
+Instead of usual access token response user receives payload like:
+```json
+{
+    "message": "Mail with recover link has been sent to provided address",
+    "expires_in": 3600
+}
+```
+
 ## Author
 [Yuriy Belenko](https://github.com/ybelenko)
